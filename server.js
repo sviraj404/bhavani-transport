@@ -304,9 +304,9 @@ async function startServer() {
     res.json({ ...booking, status });
   });
 
-  app.listen(PORT, () => {
-    console.log(`Bhavani Transport running at http://localhost:${PORT}`);
-  });
+  app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Bhavani Transport running on port ${PORT}`);
+});
 }
 
 startServer().catch(error => {
