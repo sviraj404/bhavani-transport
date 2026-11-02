@@ -1,17 +1,24 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Bhavani Transport | Staff Dashboard</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f3f5f9;
       color: #17243b;
     }
+
     header {
       background: #10213d;
       color: white;
@@ -19,8 +26,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    main { padding: 25px; }
+
+    header h2 {
+      margin: 0;
+    }
+
+    main {
+      padding: 25px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
     .card {
       background: white;
       padding: 20px;
@@ -28,158 +47,406 @@
       margin-bottom: 20px;
       box-shadow: 0 2px 8px #00000012;
     }
+
     button {
-      padding: 9px 14px;
+      padding: 10px 15px;
       border: 0;
       border-radius: 5px;
       cursor: pointer;
       margin: 3px;
+      font-weight: bold;
     }
-    .approve { background: #d9f5e3; color: #126333; }
-    .reject { background: #ffe1e1; color: #a51e1e; }
-    .logout { background: #e9bd63; color: #10213d; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-    #message { color: #a51e1e; }
-    .table-wrap { overflow-x: auto; }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .approve {
+      background: #d9f5e3;
+      color: #126333;
+    }
+
+    .reject {
+      background: #ffe1e1;
+      color: #a51e1e;
+    }
+
+    .logout {
+      background: #e9bd63;
+      color: #10213d;
+    }
+
+    .refresh {
+      background: #10213d;
+      color: white;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 750px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #f3f5f9;
+    }
+
+    #message {
+      font-weight: bold;
+      color: #126333;
+    }
+
+    .error {
+      color: #a51e1e !important;
+    }
+
+    .status {
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 15px;
+      }
+
+      header h2 {
+        font-size: 18px;
+      }
+
+      main {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 14px;
+      }
+    }
   </style>
 </head>
+
 <body>
+
   <header>
     <h2>Bhavani Transport — Staff Dashboard</h2>
     <button class="logout" id="logoutBtn">Logout</button>
   </header>
 
   <main>
+
+    <!-- Dashboard Overview -->
     <div class="card">
       <h3>Dashboard Overview</h3>
+
       <p id="summary">Loading dashboard...</p>
+
+      <button class="refresh" id="refreshBtn">
+        Refresh Bookings
+      </button>
+
       <p id="message"></p>
     </div>
 
+    <!-- Fleet Information -->
     <div class="card">
       <h3>Fleet Information</h3>
       <pre id="fleet">Loading fleet...</pre>
     </div>
 
+    <!-- Customer Bookings -->
     <div class="card">
       <h3>Customer Bookings</h3>
+
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Booking</th>
-              <th>From</th>
-              <th>To</th>
+              <th>Booking ID</th>
+              <th>Route</th>
               <th>Cargo</th>
+              <th>Weight</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
-          <tbody id="bookingRows"></tbody>
+
+          <tbody id="bookingRows">
+            <tr>
+              <td colspan="6">Loading bookings...</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
+
   </main>
 
-<script>
-const rows = document.getElementById("bookingRows");
-const message = document.getElementById("message");
+  <script>
+    const rows = document.getElementById("bookingRows");
+    const message = document.getElementById("message");
 
-async function loadDashboard() {
-  try {
-    const auth = await fetch("/api/auth/me");
-
-    if (!auth.ok) {
-      window.location.href = "/staff-login.html";
-      return;
+    // Show messages
+    function showMessage(text, isError = false) {
+      message.textContent = text;
+      message.className = isError ? "error" : "";
     }
 
-    const response = await fetch("/api/dashboard");
-    const data = await response.json();
+    // Load dashboard
+    async function loadDashboard() {
 
-    if (!response.ok) {
-      throw new Error(data.message || "Could not load dashboard");
+      try {
+
+        showMessage("Loading dashboard...");
+
+        // Check staff authentication
+        const auth = await fetch("/api/auth/me");
+
+        if (!auth.ok) {
+          window.location.href = "/staff-login.html";
+          return;
+        }
+
+        // Fetch dashboard data
+        const response = await fetch("/api/dashboard");
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Could not load dashboard.");
+        }
+
+        const bookings = data.bookings || [];
+
+        // Dashboard summary
+        const total = bookings.length;
+
+        const requested = bookings.filter(
+          b => b.status === "requested"
+        ).length;
+
+        const scheduled = bookings.filter(
+          b => b.status === "scheduled"
+        ).length;
+
+        const rejected = bookings.filter(
+          b => b.status === "rejected"
+        ).length;
+
+        document.getElementById("summary").textContent =
+          `Total bookings: ${total} | Pending: ${requested} | Approved: ${scheduled} | Rejected: ${rejected}`;
+
+        // Fleet information
+        document.getElementById("fleet").textContent =
+          JSON.stringify(data.fleet || {}, null, 2);
+
+        // Clear previous rows
+        rows.innerHTML = "";
+
+        if (bookings.length === 0) {
+
+          rows.innerHTML = `
+            <tr>
+              <td colspan="6">No bookings found.</td>
+            </tr>
+          `;
+
+          showMessage("Dashboard loaded successfully.");
+          return;
+        }
+
+        // Display bookings
+        bookings.forEach(booking => {
+
+          const tr = document.createElement("tr");
+
+          const values = [
+            booking.id,
+            booking.route,
+            booking.cargo,
+            booking.weight + " tonnes",
+            booking.status
+          ];
+
+          values.forEach((value, index) => {
+
+            const td = document.createElement("td");
+
+            td.textContent =
+              value == null ? "-" : String(value);
+
+            if (index === 4) {
+              td.className = "status";
+            }
+
+            tr.appendChild(td);
+
+          });
+
+          // Action buttons
+          const action = document.createElement("td");
+
+          if (booking.status === "requested") {
+
+            const approveBtn = document.createElement("button");
+
+            approveBtn.textContent = "Approve";
+            approveBtn.className = "approve";
+
+            approveBtn.addEventListener("click", () => {
+              updateBooking(booking.id, "scheduled", approveBtn);
+            });
+
+            const rejectBtn = document.createElement("button");
+
+            rejectBtn.textContent = "Reject";
+            rejectBtn.className = "reject";
+
+            rejectBtn.addEventListener("click", () => {
+              updateBooking(booking.id, "rejected", rejectBtn);
+            });
+
+            action.appendChild(approveBtn);
+            action.appendChild(rejectBtn);
+
+          } else {
+
+            action.textContent =
+              booking.status === "scheduled"
+                ? "Approved"
+                : "Rejected";
+
+          }
+
+          tr.appendChild(action);
+
+          rows.appendChild(tr);
+
+        });
+
+        showMessage("Bookings loaded successfully.");
+
+      } catch (error) {
+
+        showMessage(error.message, true);
+
+        rows.innerHTML = `
+          <tr>
+            <td colspan="6">Unable to load bookings.</td>
+          </tr>
+        `;
+
+      }
+
     }
 
-    const bookings = data.bookings || [];
-    document.getElementById("summary").textContent =
-      "Total bookings: " + bookings.length;
+    // Approve or reject booking
+    async function updateBooking(id, status, button) {
 
-    document.getElementById("fleet").textContent =
-      JSON.stringify(data.fleet || {}, null, 2);
+      try {
 
-    rows.innerHTML = "";
+        if (!id) {
+          throw new Error("Booking ID is missing.");
+        }
 
-    if (!bookings.length) {
-      rows.innerHTML = '<tr><td colspan="6">No bookings found.</td></tr>';
-      return;
+        const actionName =
+          status === "scheduled" ? "approve" : "reject";
+
+        const confirmed = confirm(
+          `Are you sure you want to ${actionName} this booking?`
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        button.disabled = true;
+
+        showMessage("Updating booking...");
+
+        const response = await fetch(
+          "/api/bookings/" + encodeURIComponent(id),
+          {
+            method: "PATCH",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              status: status
+            })
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error || "Booking update failed."
+          );
+        }
+
+        showMessage(
+          status === "scheduled"
+            ? "Booking approved successfully!"
+            : "Booking rejected successfully!"
+        );
+
+        // Refresh dashboard
+        await loadDashboard();
+
+      } catch (error) {
+
+        showMessage(error.message, true);
+
+        button.disabled = false;
+
+      }
+
     }
 
-    bookings.forEach(booking => {
-      const tr = document.createElement("tr");
-      const id = booking._id;
+    // Refresh button
+    document.getElementById("refreshBtn")
+      .addEventListener("click", loadDashboard);
 
-      const values = [
-        id,
-        booking.from,
-        booking.to,
-        booking.cargo,
-        booking.status
-      ];
+    // Logout
+    document.getElementById("logoutBtn")
+      .addEventListener("click", async () => {
 
-      values.forEach(value => {
-        const td = document.createElement("td");
-        td.textContent = value == null ? "-" : String(value);
-        tr.appendChild(td);
+        try {
+
+          await fetch("/api/auth/logout", {
+            method: "POST"
+          });
+
+        } finally {
+
+          window.location.href = "/staff-login.html";
+
+        }
+
       });
 
-      const action = document.createElement("td");
-
-      ["approved", "rejected"].forEach(status => {
-        const btn = document.createElement("button");
-        btn.textContent = status === "approved" ? "Approve" : "Reject";
-        btn.className = status === "approved" ? "approve" : "reject";
-        btn.onclick = () => updateBooking(id, status);
-        action.appendChild(btn);
-      });
-
-      tr.appendChild(action);
-      rows.appendChild(tr);
-    });
-  } catch (error) {
-    message.textContent = error.message;
-  }
-}
-
-async function updateBooking(id, status) {
-  try {
-    const response = await fetch("/api/bookings/" + encodeURIComponent(id), {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Booking update failed");
-    }
-
-    message.textContent = "Booking updated successfully.";
+    // Initial dashboard load
     loadDashboard();
-  } catch (error) {
-    message.textContent = error.message;
-  }
-}
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await fetch("/api/auth/logout", { method: "POST" });
-  window.location.href = "/staff-login.html";
-});
+  </script>
 
-loadDashboard();
-</script>
 </body>
 </html>
-```
