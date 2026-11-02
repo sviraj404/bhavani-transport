@@ -102,7 +102,10 @@ async function startServer() {
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ client }),
+    store: MongoStore.create({
+  clientPromise: Promise.resolve(client),
+  collectionName: "sessions"
+}),
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
