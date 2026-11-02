@@ -1,0 +1,615 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Bhavani Transport | AI-Powered Logistics Scheduling Platform</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HEADER / NAVIGATION -->
+  <header>
+    <div class="wrap">
+
+      <a class="brand" href="#top">
+        <i aria-hidden="true"></i>
+        Bhavani Transport
+      </a>
+
+      <nav aria-label="Main navigation">
+        <a href="#services">Services</a>
+        <a href="#demo">Book Transport</a>
+        <a href="#how">How it works</a>
+        <a href="#scope">Project Scope</a>
+        <a href="#tech">Technology</a>
+        <a href="#about">About</a>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main id="top">
+
+    <!-- HERO SECTION -->
+    <div class="wrap hero">
+
+      <h1>Move your cargo by road or by water.</h1>
+
+      <p class="lead">
+        Tell Bhavani Transport what you need to ship, where it is going
+        and by when. Our scheduling system suggests a suitable transport
+        mode, timeline and vehicle or vessel. Our team reviews and
+        confirms your booking.
+      </p>
+
+      <div class="row">
+        <a class="btn" href="#demo">Request a Booking</a>
+        <a class="btn alt" href="#about">About the Project</a>
+      </div>
+
+      <p class="meta">
+        Final-year project · AI-Assisted Logistics Scheduling Platform
+      </p>
+
+
+      <!-- CUSTOMER BOOKING SECTION ONLY -->
+      <div class="demo" id="demo">
+
+        <div class="card">
+
+          <h3>Customer: Booking Request</h3>
+
+          <p class="sub">
+            Enter your shipment details below to receive a transport
+            schedule suggestion. Our operations team will review
+            your booking request.
+          </p>
+
+          <form id="f">
+
+            <label for="cargo">Cargo Type</label>
+
+            <select id="cargo">
+              <option>General goods</option>
+              <option>Containers</option>
+              <option>Bulk / heavy cargo</option>
+              <option>Perishables</option>
+            </select>
+
+
+            <div class="two">
+
+              <div>
+                <label for="wt">Weight (Tonnes)</label>
+
+                <input
+                  id="wt"
+                  type="number"
+                  min="1"
+                  max="500"
+                  value="12"
+                  required
+                >
+              </div>
+
+              <div>
+                <label for="urg">Delivery Need</label>
+
+                <select id="urg">
+                  <option>Standard</option>
+                  <option>Urgent</option>
+                </select>
+              </div>
+
+            </div>
+
+
+            <div class="two">
+
+              <div>
+                <label for="from">Pickup Location</label>
+
+                <input
+                  id="from"
+                  type="text"
+                  placeholder="Enter pickup location"
+                  value="Mumbai"
+                  required
+                >
+              </div>
+
+              <div>
+                <label for="to">Drop Location</label>
+
+                <input
+                  id="to"
+                  type="text"
+                  placeholder="Enter destination"
+                  value="Pune"
+                  required
+                >
+              </div>
+
+            </div>
+
+
+            <label for="mode">Preferred Transport Mode</label>
+
+            <select id="mode">
+              <option value="any">No preference</option>
+              <option value="road">Road</option>
+              <option value="water">Water</option>
+            </select>
+
+
+            <div class="row" style="margin-top:14px">
+
+              <button class="btn" type="submit">
+                Get Schedule Suggestion
+              </button>
+
+            </div>
+
+          </form>
+
+
+          <!-- BOOKING RESPONSE -->
+          <div
+            class="sugg"
+            id="sugg"
+            hidden
+            aria-live="polite">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="tint">
+
+      <div class="wrap">
+
+        <h2>What Bhavani Transport Offers</h2>
+
+        <p class="intro">
+          A logistics service that helps customers transport goods
+          efficiently through road and water transportation.
+        </p>
+
+
+        <div class="cols">
+
+          <div class="r">
+            <h3>Roadway Transport</h3>
+            <p>
+              Trucks for general goods, containers, heavy materials
+              and time-sensitive deliveries. Suitable for door-to-door
+              transportation.
+            </p>
+          </div>
+
+
+          <div class="w">
+            <h3>Waterway Transport</h3>
+            <p>
+              Water transportation options for bulk and heavy cargo
+              where suitable routes and schedules are available.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Online Booking</h3>
+            <p>
+              Customers can submit their transportation requirements
+              through our online booking system.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Schedule Suggestions</h3>
+            <p>
+              The system evaluates shipment requirements and suggests
+              suitable transportation options.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Booking Management</h3>
+            <p>
+              Booking requests are stored and reviewed by the
+              operations team before confirmation.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Customer Support</h3>
+            <p>
+              Customers can get assistance with their transportation
+              requirements and booking-related queries.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+
+      <div class="wrap">
+
+        <h2>From Request to Delivery</h2>
+
+        <ol class="steps">
+
+          <li>
+            <h3>Customer Submits a Request</h3>
+            <p>
+              The customer enters cargo type, weight, pickup location,
+              destination and preferred transport mode.
+            </p>
+          </li>
+
+
+          <li>
+            <h3>Requirement Analysis</h3>
+            <p>
+              The system processes shipment information and evaluates
+              suitable transportation options.
+            </p>
+          </li>
+
+
+          <li>
+            <h3>Schedule Suggestion</h3>
+            <p>
+              The system proposes a suitable transport mode and
+              estimated schedule based on the submitted information.
+            </p>
+          </li>
+
+
+          <li>
+            <h3>Staff Review</h3>
+            <p>
+              The operations team reviews the booking and confirms
+              or rejects the suggested schedule through a separate
+              staff administration portal.
+            </p>
+          </li>
+
+
+          <li>
+            <h3>Booking Updates</h3>
+            <p>
+              Customers can receive updates about their booking
+              status as supported by the system.
+            </p>
+          </li>
+
+        </ol>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- PROJECT SCOPE -->
+    <section id="scope" class="tint">
+
+      <div class="wrap">
+
+        <h2>Project Scope</h2>
+
+        <div class="cols">
+
+          <div>
+
+            <h3>In Scope</h3>
+
+            <ul>
+              <li>Public customer website</li>
+              <li>Customer booking form</li>
+              <li>Road and water transportation options</li>
+              <li>Schedule suggestion system</li>
+              <li>Separate staff login portal</li>
+              <li>Admin dashboard for booking management</li>
+              <li>Fleet availability management</li>
+              <li>Booking status management</li>
+              <li>MongoDB database integration</li>
+            </ul>
+
+          </div>
+
+
+          <div>
+
+            <h3>Future Improvements</h3>
+
+            <ul>
+              <li>Real-time GPS tracking</li>
+              <li>Online freight payments</li>
+              <li>Live traffic and route optimisation</li>
+              <li>Mobile application</li>
+              <li>Shipment document uploads</li>
+            </ul>
+
+          </div>
+
+
+          <div>
+
+            <h3>Stakeholders</h3>
+
+            <ul>
+              <li><b>Customers:</b> Submit transportation requests.</li>
+              <li><b>Operations Staff:</b> Review bookings and manage fleets.</li>
+              <li><b>Business Owner:</b> Manage logistics operations.</li>
+              <li><b>Project Guide:</b> Review the academic project.</li>
+            </ul>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- TECHNOLOGY FEASIBILITY -->
+    <section id="feasibility">
+
+      <div class="wrap">
+
+        <h2>Why This Project Is Feasible</h2>
+
+        <div class="cols">
+
+          <div>
+            <h3>Technical Feasibility</h3>
+            <p>
+              The project uses commonly available technologies
+              including HTML, CSS, JavaScript, Node.js, Express
+              and MongoDB.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Economic Feasibility</h3>
+            <p>
+              The development can use free development tools
+              and available free hosting and database tiers,
+              subject to their usage limits.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Operational Feasibility</h3>
+            <p>
+              Customers can submit bookings through a browser.
+              Staff review and manage requests through a separate
+              administration portal.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Project Feasibility</h3>
+            <p>
+              The application is developed using modular components
+              and existing libraries, making it suitable for
+              an academic project.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- TECHNOLOGY STACK -->
+    <section id="tech" class="tint">
+
+      <div class="wrap">
+
+        <h2>Technology Stack</h2>
+
+        <div class="stack">
+
+          <div>
+            <h3>HTML, CSS and JavaScript</h3>
+            <p>
+              Used to develop the customer-facing website
+              and interactive user interface.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Node.js and Express</h3>
+            <p>
+              Backend server, API endpoints and application logic.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>MongoDB Atlas</h3>
+            <p>
+              Database for storing customer bookings and
+              application information.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Express Sessions</h3>
+            <p>
+              Staff authentication and session management.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Git and GitHub</h3>
+            <p>
+              Source-code management and version control.
+            </p>
+          </div>
+
+
+          <div>
+            <h3>Deployment</h3>
+            <p>
+              Hosting options for making the application
+              accessible through the internet.
+            </p>
+          </div>
+
+        </div>
+
+
+        <h3 style="margin-top:34px">
+          Expected Deliverables
+        </h3>
+
+
+        <div class="cols" style="margin-top:14px">
+
+          <div>
+            <ul>
+              <li>Customer-facing transport website</li>
+              <li>Online booking system</li>
+              <li>Backend API integration</li>
+            </ul>
+          </div>
+
+
+          <div>
+            <ul>
+              <li>Separate staff administration portal</li>
+              <li>Booking and fleet management</li>
+              <li>Project report and system diagrams</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+
+      <div class="wrap">
+
+        <h2>About the Project</h2>
+
+        <p class="intro">
+          Manual scheduling through phone calls and spreadsheets
+          can be time-consuming and difficult to manage.
+          Bhavani Transport provides an online platform that
+          simplifies transportation booking, processes shipment
+          requirements and allows staff to manage bookings
+          through a separate administration portal.
+        </p>
+
+
+        <dl class="info">
+
+          <div>
+            <dt>Project Title</dt>
+            <dd>
+              Bhavani Transport — AI-Assisted Logistics
+              Scheduling Platform
+            </dd>
+          </div>
+
+
+          <div>
+            <dt>Team Member / Roll Number</dt>
+            <dd>Viraj Vinod Shinde / 113</dd>
+          </div>
+
+
+          <div>
+            <dt>Guide / Supervisor</dt>
+            <dd>Pritam Karanjkar</dd>
+          </div>
+
+
+          <div>
+            <dt>Institution</dt>
+            <dd>
+              V. K. Krishna Menon College of Commerce &amp; Economics,
+              Sharad Shankar Dighe College of Science and
+              P. A. Menon College of Management
+            </dd>
+          </div>
+
+
+          <div>
+            <dt>Proposal Date</dt>
+            <dd>29.07.2026</dd>
+          </div>
+
+        </dl>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="wrap">
+      Bhavani Transport — Reliable Roadway and Waterway
+      Logistics Services.
+    </div>
+
+  </footer>
+
+
+  <!-- CUSTOMER WEBSITE JAVASCRIPT -->
+  <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+node_modules/
+.env
+data.json
+.DS_Store
+
+change-password.js
+check-password.js
